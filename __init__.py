@@ -35,25 +35,15 @@ def mongraphique():
 def monhistogramme():
     return render_template("histogramme.html")
   
-@app.route('/api/commits/')
-def commits():
-    # Récupération des données des commits depuis l'API GitHub
-    response = urlopen('https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits')
-    raw_content = response.read()
-    json_content = json.loads(raw_content.decode('utf-8'))
-    
-    # Compter les commits par minute
-    minutes_count = {}
-    for commit in json_content:
-        date_string = commit['commit']['author']['date']
+@app.route('/extract-minutes/<date_string>')
+def extract_minutes(date_string):
+    try:
         date_object = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%SZ')
-        minute = date_object.minute
-        if minute in minutes_count:
-            minutes_count[minute] += 1
-        else:
-            minutes_count[minute] = 1
-    
-    return jsonify(minutes_count)
+        minutes = date_object.strftime('%Y-%m-%d %H:%M')  # Format minute
+        return jsonify({'minutes': minutes})
+    except ValueError:
+        return jsonify({'error': 'Invalid date format. Use the following format: YYYY-MM-DDTHH:MM:SSZ'}), 400
+  
 
 @app.route('/commits/')
 def commits_graph():
