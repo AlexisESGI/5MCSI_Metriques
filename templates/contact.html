@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page de Contact</title>
+    <title>Formulaire de Contact</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,11 +12,11 @@
             padding: 0;
         }
         .container {
-            width: 50%;
+            width: 60%;
             margin: 50px auto;
-            background-color: white;
+            background-color: #fff;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
         h2 {
@@ -28,24 +28,26 @@
             flex-direction: column;
         }
         label {
-            margin: 10px 0 5px;
+            margin-top: 10px;
+            font-weight: bold;
         }
         input[type="text"], textarea {
             padding: 10px;
             font-size: 16px;
-            border-radius: 4px;
+            border-radius: 5px;
             border: 1px solid #ccc;
+            margin-top: 5px;
         }
         textarea {
             resize: vertical;
         }
         button {
             margin-top: 20px;
-            padding: 10px;
+            padding: 12px;
             background-color: #007BFF;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
         }
@@ -56,7 +58,19 @@
 </head>
 <body>
     <div class="container">
-        <h2>Contactez-nous</h2>
-        <form>
+        <h2>Formulaire de Contact</h2>
+        <form action="/submit" method="post">
             <label for="nom">Nom :</label>
-            <input type="text" id="nom" name="nom" placeholder="
+            <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+
+            <label for="prenom">Prénom :</label>
+            <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required>
+
+            <label for="message">Message :</label>
+            <textarea id="message" name="message" rows="5" placeholder="Votre message..." required></textarea>
+
+            <button type="submit">Envoyer</button>
+        </form>
+    </div>
+</body>
+</html>
