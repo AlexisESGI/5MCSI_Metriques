@@ -8,13 +8,17 @@
     <h1>Graphique des Commits</h1>
     <canvas id="commitsChart" width="400" height="200"></canvas>
     <script>
-        // Fetch des données des commits depuis l'API
+        // Récupération des données des commits depuis l'API
         fetch('/api/commits/')
         .then(response => response.json())
         .then(data => {
             const ctx = document.getElementById('commitsChart').getContext('2d');
+
+            // Préparation des données pour le graphique
             const minutes = Object.keys(data);
             const counts = Object.values(data);
+            
+            // Création du graphique avec Chart.js
             new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -28,13 +32,27 @@
                     }]
                 },
                 options: {
+                    responsive: true,
                     scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Minute'
+                            }
+                        },
                         y: {
+                            title: {
+                                display: true,
+                                text: 'Nombre de Commits'
+                            },
                             beginAtZero: true
                         }
                     }
                 }
             });
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des données :', error);
         });
     </script>
 </body>
