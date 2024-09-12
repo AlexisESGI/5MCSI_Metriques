@@ -3,72 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Histogramme des températures</title>
+    <title>Graphique à colonne</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div style="width: 75%; margin: auto;">
-        <canvas id="temperatureChart"></canvas>
-    </div>
 
-    <script>
-        // Les dates et les températures extraites des données
-        const labels = [
-            "2017-01-30 18:00", "2017-01-30 21:00", "2017-01-31 00:00", "2017-01-31 03:00", 
-            "2017-01-31 06:00", "2017-01-31 09:00", "2017-01-31 12:00", "2017-01-31 15:00",
-            "2017-01-31 18:00", "2017-01-31 21:00", "2017-02-01 00:00", "2017-02-01 03:00",
-            "2017-02-01 06:00", "2017-02-01 09:00", "2017-02-01 12:00", "2017-02-01 15:00",
-            "2017-02-01 18:00", "2017-02-01 21:00", "2017-02-02 00:00", "2017-02-02 03:00",
-            "2017-02-02 06:00", "2017-02-02 09:00", "2017-02-02 12:00", "2017-02-02 15:00",
-            "2017-02-02 18:00", "2017-02-02 21:00", "2017-02-03 00:00", "2017-02-03 03:00",
-            "2017-02-03 06:00", "2017-02-03 09:00", "2017-02-03 12:00", "2017-02-03 15:00",
-            "2017-02-03 18:00", "2017-02-03 21:00", "2017-02-04 00:00", "2017-02-04 03:00"
-        ];
+<canvas id="temperatureChart" width="400" height="200"></canvas>
 
-        const data = {
+<script>
+    // Données fournies
+    const data = {
+        "results":[
+            {"Jour":1485799200,"temp":10.61},
+            {"Jour":1485810000,"temp":9.41},
+            {"Jour":1485820800,"temp":9.15},
+            {"Jour":1485831600,"temp":9.12},
+            {"Jour":1485842400,"temp":9.51},
+            {"Jour":1485853200,"temp":9.63},
+            {"Jour":1485864000,"temp":10.19},
+            {"Jour":1485874800,"temp":11.51},
+            {"Jour":1485885600,"temp":10.94},
+            {"Jour":1485896400,"temp":10.06},
+            {"Jour":1485907200,"temp":11.03},
+            {"Jour":1485918000,"temp":11.68},
+            {"Jour":1485928800,"temp":12.55},
+            {"Jour":1485939600,"temp":12.34},
+            {"Jour":1485950400,"temp":12.01},
+            {"Jour":1485961200,"temp":11.01},
+            {"Jour":1485972000,"temp":9.48},
+            {"Jour":1485982800,"temp":8.71},
+            {"Jour":1485993600,"temp":8.83},
+            {"Jour":1486004400,"temp":10.56},
+            {"Jour":1486015200,"temp":11.98},
+            {"Jour":1486026000,"temp":11.61},
+            {"Jour":1486036800,"temp":10.62},
+            {"Jour":1486047600,"temp":10.66},
+            {"Jour":1486058400,"temp":10.64},
+            {"Jour":1486069200,"temp":10.42},
+            {"Jour":1486080000,"temp":10.96},
+            {"Jour":1486090800,"temp":11.88},
+            {"Jour":1486101600,"temp":13.01},
+            {"Jour":1486112400,"temp":12.99},
+            {"Jour":1486123200,"temp":12.80},
+            {"Jour":1486134000,"temp":12.68},
+            {"Jour":1486144800,"temp":12.02},
+            {"Jour":1486155600,"temp":10.67},
+            {"Jour":1486166400,"temp":10.01},
+            {"Jour":1486177200,"temp":10.34},
+            {"Jour":1486188000,"temp":12.11},
+            {"Jour":1486198800,"temp":12.78},
+            {"Jour":1486209600,"temp":12.76},
+            {"Jour":1486220400,"temp":12.36}
+        ]
+    };
+
+    // Transformation des timestamps en dates lisibles
+    const labels = data.results.map(item => {
+        const date = new Date(item.Jour * 1000);
+        return date.toLocaleDateString("fr-FR", {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
+    });
+
+    // Extraction des températures
+    const temperatures = data.results.map(item => item.temp);
+
+    // Configuration du graphique
+    const ctx = document.getElementById('temperatureChart').getContext('2d');
+    const temperatureChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
             labels: labels,
             datasets: [{
-                label: 'Température (K)',
+                label: 'Température (°C)',
+                data: temperatures,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                data: [
-                    283.76, 282.56, 282.30, 282.27, 282.66, 282.78, 283.33, 284.65, 
-                    284.09, 283.21, 284.17, 284.82, 285.70, 285.49, 285.16, 284.16, 
-                    282.63, 281.85, 281.97, 283.70, 285.12, 284.75, 283.76, 283.80,
-                    283.57, 284.11, 285.03, 286.15, 286.13, 285.95, 285.82, 285.16, 
-                    283.81, 283.15, 283.49
-                ]
+                borderWidth: 1
             }]
-        };
-
-        const config = {
-            type: 'bar',
-            data: data,
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        title: {
-                            display: true,
-                            text: 'Température (K)'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Date et heure'
-                        }
-                    }
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: false
                 }
             }
-        };
+        }
+    });
+</script>
 
-        const temperatureChart = new Chart(
-            document.getElementById('temperatureChart'),
-            config
-        );
-    </script>
 </body>
 </html>
