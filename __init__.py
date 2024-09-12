@@ -37,27 +37,23 @@ def monhistogramme():
   
 @app.route('/commits/')
 def commits():
-    # Requête à l'API GitHub pour obtenir les commits
-    url = 'https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits'
-    response = urlopen(url)
+    response = urlopen('https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits')
     raw_content = response.read()
-    commits_data = json.loads(raw_content.decode('utf-8'))
+    json_content = json.loads(raw_content.decode('utf-8'))
+    
+    # Extraire les minutes des dates de commits
+    minutes_count = {}
+    for commit in json_content:
+        date_string = commit['commit']['author']['date']
+        date_object = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%SZ')
+        minute = date_object.minute
+        if minute in minutes_count:
+            minutes_count[minute] += 1
+        else:
+            minutes_count[minute] = 1
+    
+    return jsonify(minutes_count)
 
-    # Récupérer les minutes des commits
-    commit_minutes = []
-    for commit in commits_data:
-        commit_date = commit['commit']['author']['date']
-        date_object = datetime.strptime(commit_date, '%Y-%m-%dT%H:%M:%SZ')
-        commit_minutes.append(date_object.minute)
-
-    # Compter les commits par minute
-    minute_counts = {minute: commit_minutes.count(minute) for minute in set(commit_minutes)}
-
-    return jsonify(minute_counts)
-
-@app.route('/commits-graph/')
-def commits_graph():
-    return render_template("commits_graph.html")
 
 if __name__ == "__main__":
   app.run(debug=True)
