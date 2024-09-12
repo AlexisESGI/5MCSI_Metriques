@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Commits Graphique</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Graphique des Commits</h1>
+    <canvas id="commitsChart" width="400" height="200"></canvas>
+    <script>
+        fetch('/commits/')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('commitsChart').getContext('2d');
+            const minutes = Object.keys(data);
+            const counts = Object.values(data);
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: minutes,
+                    datasets: [{
+                        label: 'Nombre de Commits par Minute',
+                        data: counts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
