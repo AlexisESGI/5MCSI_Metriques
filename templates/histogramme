@@ -1,50 +1,74 @@
-<html>
-  <head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load("current", {packages:["corechart"]});
-      google.charts.setOnLoadCallback(drawChart);
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histogramme des températures</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div style="width: 75%; margin: auto;">
+        <canvas id="temperatureChart"></canvas>
+    </div>
 
-      function drawChart() {
-        // URL de l'API OpenWeatherMap
-        var apiUrl = "https://samples.openweathermap.org/data/2.5/forecast?lat=0&lon=0&appid=xxx";
+    <script>
+        // Les dates et les températures extraites des données
+        const labels = [
+            "2017-01-30 18:00", "2017-01-30 21:00", "2017-01-31 00:00", "2017-01-31 03:00", 
+            "2017-01-31 06:00", "2017-01-31 09:00", "2017-01-31 12:00", "2017-01-31 15:00",
+            "2017-01-31 18:00", "2017-01-31 21:00", "2017-02-01 00:00", "2017-02-01 03:00",
+            "2017-02-01 06:00", "2017-02-01 09:00", "2017-02-01 12:00", "2017-02-01 15:00",
+            "2017-02-01 18:00", "2017-02-01 21:00", "2017-02-02 00:00", "2017-02-02 03:00",
+            "2017-02-02 06:00", "2017-02-02 09:00", "2017-02-02 12:00", "2017-02-02 15:00",
+            "2017-02-02 18:00", "2017-02-02 21:00", "2017-02-03 00:00", "2017-02-03 03:00",
+            "2017-02-03 06:00", "2017-02-03 09:00", "2017-02-03 12:00", "2017-02-03 15:00",
+            "2017-02-03 18:00", "2017-02-03 21:00", "2017-02-04 00:00", "2017-02-04 03:00"
+        ];
 
-        // Récupération des données météo
-        fetch(apiUrl)
-          .then(response => response.json())
-          .then(data => {
-            // Extraction des températures pour chaque prévision
-            var forecastData = data.list.map(item => {
-              return [new Date(item.dt * 1000).toLocaleString(), item.main.temp];
-            });
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Température (K)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                data: [
+                    283.76, 282.56, 282.30, 282.27, 282.66, 282.78, 283.33, 284.65, 
+                    284.09, 283.21, 284.17, 284.82, 285.70, 285.49, 285.16, 284.16, 
+                    282.63, 281.85, 281.97, 283.70, 285.12, 284.75, 283.76, 283.80,
+                    283.57, 284.11, 285.03, 286.15, 286.13, 285.95, 285.82, 285.16, 
+                    283.81, 283.15, 283.49
+                ]
+            }]
+        };
 
-            // Ajout du titre de la colonne
-            forecastData.unshift(['Date', 'Température (°C)']);
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Température (K)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date et heure'
+                        }
+                    }
+                }
+            }
+        };
 
-            // Préparation des données pour Google Charts
-            var chartData = google.visualization.arrayToDataTable(forecastData);
-
-            // Options de l'histogramme
-            var options = {
-              title: 'Températures prévisionnelles',
-              legend: { position: 'none' },
-              hAxis: {
-                title: 'Date et heure',
-              },
-              vAxis: {
-                title: 'Température (°C)',
-              },
-            };
-
-            // Affichage de l'histogramme
-            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-            chart.draw(chartData, options);
-          })
-          .catch(error => {
-            console.error('Erreur lors de la récupération des données météo :', error);
-          });
-      }
+        const temperatureChart = new Chart(
+            document.getElementById('temperatureChart'),
+            config
+        );
     </script>
-  </head>
-  <body>
-    <div id="chart_div" style="width: 900px;
+</body>
+</html>
