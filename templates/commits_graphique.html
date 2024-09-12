@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Minutes des Commits</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  </head>
+  <body>
+    <div id="chart_div"></div>
+    <script>
+      google.charts.load('current', { packages: ['corechart'] });
+      google.charts.setOnLoadCallback(drawChart);
+      
+      function drawChart() {
+        fetch('/commits/')
+          .then(response => response.json())
+          .then(data => {
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('string', 'Commit');
+            dataTable.addColumn('number', 'Minutes');
+            
+            data.commits_minutes.forEach((minutes, index) => {
+              dataTable.addRow([`Commit ${index+1}`, minutes]);
+            });
+
+            var options = {
+              title: 'Minutes des commits',
+              legend: { position: 'bottom' }
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            chart.draw(dataTable, options);
+          });
+      }
+    </script>
+  </body>
+</html>
