@@ -8,7 +8,8 @@
     <h1>Graphique des Commits</h1>
     <canvas id="commitsChart" width="400" height="200"></canvas>
     <script>
-        fetch('/commits/')
+        // Fetch des données des commits depuis l'API
+        fetch('/api/commits/')
         .then(response => response.json())
         .then(data => {
             const ctx = document.getElementById('commitsChart').getContext('2d');
